@@ -59,12 +59,13 @@ android {
 
 dependencies {
     implementation(project(":core"))
-    testImplementation(project(":core"))
     implementation(libs.bundles.navigation)
 
     // Test
-    testImplementation(libs.junit)
-    androidTestImplementation(libs.androidx.junit)
-    androidTestImplementation(libs.androidx.espresso.core)
-    androidTestImplementation(libs.androidx.ui.test.junit4)
+    testImplementation(libs.bundles.unitTest)
+    androidTestImplementation(libs.bundles.uiTest)
+
+    // Debug
+    debugImplementation(libs.compose.ui.tooling)
+    debugImplementation(libs.androidx.ui.test.manifest)
 }

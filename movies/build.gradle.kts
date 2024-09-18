@@ -4,7 +4,7 @@ plugins {
 }
 
 android {
-    namespace = "com.klewerro.moviedbapp.core"
+    namespace = "com.klewerro.moviedbapp.movies"
     compileSdk = libs.versions.sdk.compile.get().toInt()
 
     defaultConfig {
@@ -51,11 +51,11 @@ android {
 }
 
 dependencies {
-    api(libs.bundles.androidx)
-    api(libs.bundles.compose)
+    implementation(project(":core"))
 
     // Test
     testImplementation(libs.bundles.unitTest)
+    androidTestImplementation(libs.bundles.uiTest)
 
     // Debug
     debugImplementation(libs.compose.ui.tooling)

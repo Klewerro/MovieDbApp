@@ -68,3 +68,15 @@ navigation = [
     "compose-navigation",
     "compose-animation"
 ]
+retrofit = [
+    "retrofit-library",
+    "retrofit-gson"
+]
+unitTest = [
+    "junit"
+]
+uiTest = [
+    "androidx-junit",
+    "androidx-espresso-core",
+    "androidx-ui-test-junit4"
+]
