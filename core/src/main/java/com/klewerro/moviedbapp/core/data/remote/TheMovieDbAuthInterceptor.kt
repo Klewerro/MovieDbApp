@@ -6,7 +6,7 @@ import okhttp3.Response
 
 class TheMovieDbAuthInterceptor : Interceptor {
     override fun intercept(chain: Interceptor.Chain): Response {
-        var originalRequest = chain.request()
+        val originalRequest = chain.request()
         val apiKey = BuildConfig.API_KEY
         val token = "Bearer $apiKey"
         val newRequest = originalRequest.newBuilder()

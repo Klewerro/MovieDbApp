@@ -5,6 +5,8 @@ import java.util.Properties
 plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.android)
+    alias(libs.plugins.dagger.hilt.plugin)
+    alias(libs.plugins.ksp)
 }
 
 android {
@@ -65,6 +67,12 @@ dependencies {
     api(libs.bundles.androidx)
     api(libs.bundles.compose)
     api(libs.bundles.retrofit)
+    api(libs.timber)
+    implementation(libs.bundles.paging)
+    // Hilt
+    implementation(libs.dagger.hilt.android)
+    implementation(libs.dagger.hilt.navigation)
+    ksp(libs.dagger.hilt.compiler)
 
     // Test
     testImplementation(libs.bundles.unitTest)

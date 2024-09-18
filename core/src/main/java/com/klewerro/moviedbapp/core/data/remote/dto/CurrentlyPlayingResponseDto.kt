@@ -4,7 +4,7 @@ import com.google.gson.annotations.SerializedName
 
 data class CurrentlyPlayingResponseDto(
     @SerializedName("dates")
-    val dates: Dates,
+    val dates: DatesDto,
     @SerializedName("page")
     val page: Int,
     @SerializedName("results")

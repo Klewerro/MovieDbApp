@@ -60,9 +60,13 @@ android {
 
 dependencies {
     implementation(project(":core"))
+    implementation(project(":movies"))
+
     implementation(libs.bundles.navigation)
 
+    // Hilt
     implementation(libs.dagger.hilt.android)
+    implementation(libs.dagger.hilt.navigation)
     ksp(libs.dagger.hilt.compiler)
 
     // Test

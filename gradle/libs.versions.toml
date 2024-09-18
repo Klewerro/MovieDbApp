@@ -31,6 +31,7 @@ compose-animation = { group = "androidx.compose.animation", name = "animation", 
 # endregion
 dagger-hilt-android = { module = "com.google.dagger:hilt-android", version.ref = "hilt"}
 dagger-hilt-compiler = { module = "com.google.dagger:hilt-compiler", version.ref = "hilt"}
+dagger-hilt-navigation = { module = "androidx.hilt:hilt-navigation-compose", version = "1.2.0"}
 dagger-hilt-androidTest = { module = "com.google.dagger:hilt-android-testing", version.ref = "hilt"}
 retrofit-library = { module = "com.squareup.retrofit2:retrofit", version.ref = "retrofit" }
 retrofit-gson = { module = "com.squareup.retrofit2:converter-gson", version.ref = "retrofit" }
@@ -76,6 +77,10 @@ retrofit = [
     "retrofit-library",
     "retrofit-gson",
     "okHttp-logging"
+]
+paging = [
+    "androidx-paging-runtime",
+    "androidx-paging-compose"
 ]
 unitTest = [
     "junit"

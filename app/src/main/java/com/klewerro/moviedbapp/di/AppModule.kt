@@ -2,6 +2,8 @@ package com.klewerro.moviedbapp.di
 
 import com.klewerro.moviedbapp.core.data.remote.MovieApi
 import com.klewerro.moviedbapp.core.data.remote.TheMovieDbAuthInterceptor
+import com.klewerro.moviedbapp.core.domain.contract.MovieRepository
+import com.klewerro.moviedbapp.movies.data.MovieRepositoryImpl
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -16,6 +18,10 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 object AppModule {
+
+    @Provides
+    @Singleton
+    fun provideMovieRepository(movieApi: MovieApi): MovieRepository = MovieRepositoryImpl(movieApi)
 
     @Provides
     @Singleton
