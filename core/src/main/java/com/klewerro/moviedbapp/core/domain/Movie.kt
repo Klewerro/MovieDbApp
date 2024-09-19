@@ -1,7 +1,8 @@
 package com.klewerro.moviedbapp.core.domain
 
+import com.klewerro.moviedbapp.core.data.remote.MovieApi
+
 data class Movie(
-    val adult: Boolean,
     val id: Int,
     val title: String,
     val popularity: Double,
@@ -14,5 +15,12 @@ data class Movie(
     val releaseDate: String,
     val video: Boolean,
     val voteAverage: Double,
-    val voteCount: Int
-)
+    val voteCount: Int,
+    val adult: Boolean
+) {
+    val releaseYear = releaseDate.substringBefore('-')
+    val backdrop500Url = MovieApi.IMAGE_500 + backdropPath
+    val backdropOriginalUrl = MovieApi.IMAGE_ORIGINAL + backdropPath
+    val poster500Url = MovieApi.IMAGE_500 + posterPath
+    val posterOriginalUrl = MovieApi.IMAGE_ORIGINAL + posterPath
+}

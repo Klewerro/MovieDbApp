@@ -68,6 +68,7 @@ dependencies {
     api(libs.bundles.compose)
     api(libs.bundles.retrofit)
     api(libs.timber)
+    api(libs.coil)
     implementation(libs.bundles.paging)
     // Hilt
     implementation(libs.dagger.hilt.android)
