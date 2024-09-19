@@ -1,6 +1,11 @@
 <resources>
     <string name="retry">Retry</string>
     <string name="movie_poster">Movie poster</string>
-    <string name="server_error">Server error (%1$d)</string>
-    <string name="client_error">Client communication error (%1$d)</string>
+    <string name="server_error_message">Server error (%1$d). Please try again</string>
+    <string name="authentication_error_message">Authentication error (%1$d). API key may be empty or wrong.</string>
+    <string name="client_error_message">Client communication error (%1$d). Please try again.</string>
+    <string name="unknown_communication_error_message">Unknown communication error. Please contact with the support.</string>
+    <string name="serialization_error_message">Data serialization error. Restart application and try again.</string>
+    <string name="missing_internet_connection_message">Missing internet connection - could not get data. Try to reconnect to the internet or check if you have internet in that connection.</string>
+    <string name="fetched_data_empty_message">Fetched data is empty.</string>
 </resources>

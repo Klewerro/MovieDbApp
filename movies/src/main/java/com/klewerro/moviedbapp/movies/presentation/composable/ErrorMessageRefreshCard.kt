@@ -49,11 +49,12 @@ fun ErrorMessageRefreshCard(
                 .padding(spacing.spaceNormal),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            val errorMsg =
-                (errorLoadState as LoadState.Error).error.message
+            val error =
+                (errorLoadState as LoadState.Error).error
             Text(
-                text = errorMsg ?: "Unknown error.",
-                color = MaterialTheme.colorScheme.onErrorContainer
+                text = communicationErrorMessage(error), // errorMsg ?: "Unknown error.",
+                color = MaterialTheme.colorScheme.onErrorContainer,
+                style = MaterialTheme.typography.bodyLarge
             )
             Spacer(modifier = Modifier.height(spacing.spaceNormal))
             OutlinedButton(
@@ -71,7 +72,8 @@ fun ErrorMessageRefreshCard(
                     Spacer(modifier = Modifier.width(spacing.spaceSmall))
                     Text(
                         stringResource(RCore.string.retry),
-                        color = MaterialTheme.colorScheme.onErrorContainer
+                        color = MaterialTheme.colorScheme.onErrorContainer,
+                        style = MaterialTheme.typography.bodyLarge
                     )
                 }
             }

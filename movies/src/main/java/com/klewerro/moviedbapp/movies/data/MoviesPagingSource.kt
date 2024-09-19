@@ -9,6 +9,7 @@ import com.klewerro.moviedbapp.core.util.ConfigConstants
 import kotlinx.coroutines.delay
 import retrofit2.HttpException
 import timber.log.Timber
+import java.io.IOException
 
 class MoviesPagingSource(private val movieApi: MovieApi) : PagingSource<Int, Movie>() {
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, Movie> {
@@ -49,6 +50,8 @@ class MoviesPagingSource(private val movieApi: MovieApi) : PagingSource<Int, Mov
             )
         } catch (httpException: HttpException) {
             LoadResult.Error(httpException)
+        } catch (e: IOException) {
+            LoadResult.Error(e)
         }
     }
 
