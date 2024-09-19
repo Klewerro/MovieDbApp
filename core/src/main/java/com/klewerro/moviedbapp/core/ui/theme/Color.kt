@@ -1,4 +1,4 @@
-package com.klewerro.moviedbapp.ui.theme
+package com.klewerro.moviedbapp.core.ui.theme
 
 import androidx.compose.ui.graphics.Color
 

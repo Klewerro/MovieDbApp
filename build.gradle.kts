@@ -4,6 +4,8 @@ plugins {
     alias(libs.plugins.kotlin.android) apply false
     alias(libs.plugins.ktlint)
     alias(libs.plugins.android.library) apply false
+    alias(libs.plugins.dagger.hilt.plugin) apply false
+    alias(libs.plugins.ksp) apply false
 }
 
 subprojects {

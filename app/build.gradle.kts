@@ -1,6 +1,7 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
+    alias(libs.plugins.dagger.hilt.plugin)
     alias(libs.plugins.ksp)
 }
 
@@ -59,7 +60,14 @@ android {
 
 dependencies {
     implementation(project(":core"))
+    implementation(project(":movies"))
+
     implementation(libs.bundles.navigation)
+
+    // Hilt
+    implementation(libs.dagger.hilt.android)
+    implementation(libs.dagger.hilt.navigation)
+    ksp(libs.dagger.hilt.compiler)
 
     // Test
     testImplementation(libs.bundles.unitTest)

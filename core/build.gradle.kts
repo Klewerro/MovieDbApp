@@ -1,6 +1,12 @@
+
+import java.io.FileInputStream
+import java.util.Properties
+
 plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.android)
+    alias(libs.plugins.dagger.hilt.plugin)
+    alias(libs.plugins.ksp)
 }
 
 android {
@@ -14,8 +20,15 @@ android {
         consumerProguardFiles("consumer-rules.pro")
     }
 
+    val apiKey = Properties().apply {
+        load(FileInputStream(File(rootProject.rootDir, "local.properties")))
+    }.getProperty("api.key")
     buildTypes {
+        debug {
+            buildConfigField("String", "API_KEY", apiKey)
+        }
         release {
+            buildConfigField("String", "API_KEY", apiKey)
             isMinifyEnabled = false
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
@@ -53,6 +66,14 @@ android {
 dependencies {
     api(libs.bundles.androidx)
     api(libs.bundles.compose)
+    api(libs.bundles.retrofit)
+    api(libs.timber)
+    api(libs.coil)
+    implementation(libs.bundles.paging)
+    // Hilt
+    implementation(libs.dagger.hilt.android)
+    implementation(libs.dagger.hilt.navigation)
+    ksp(libs.dagger.hilt.compiler)
 
     // Test
     testImplementation(libs.bundles.unitTest)
