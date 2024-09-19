@@ -19,22 +19,37 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.unit.dp
 import com.klewerro.moviedbapp.core.domain.Movie
+import com.klewerro.moviedbapp.core.presentation.LocalSpacing
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun MovieDetailsSection(movie: Movie, modifier: Modifier = Modifier) {
+    val spacing = LocalSpacing.current
+
     Column(
         modifier = modifier
-            .padding(start = 8.dp, top = 8.dp, end = 8.dp)
+            .padding(
+                start = spacing.spaceSmall,
+                top = spacing.spaceSmall,
+                end = spacing.spaceSmall
+            )
             .background(
-                shape = RoundedCornerShape(topStart = 8.dp, topEnd = 8.dp),
+                shape = RoundedCornerShape(
+                    topStart = spacing.radiusSmall,
+                    topEnd = spacing.radiusSmall
+                ),
                 color = MaterialTheme.colorScheme.primaryContainer
             )
-            .padding(start = 16.dp, top = 16.dp, end = 16.dp, bottom = 32.dp)
+            .padding(
+                start = spacing.spaceNormal,
+                top = spacing.spaceNormal,
+                end = spacing.spaceNormal,
+                bottom = spacing.spaceLarge
+            )
     ) {
         Row {
             FlowRow(
-                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                horizontalArrangement = Arrangement.spacedBy(spacing.spaceSmall),
                 modifier = Modifier.weight(1f)
             ) {
                 Text(
@@ -53,7 +68,7 @@ fun MovieDetailsSection(movie: Movie, modifier: Modifier = Modifier) {
             }
             Column(horizontalAlignment = Alignment.CenterHorizontally) {
                 VoteProgressIndicator(movie.voteAverage, modifier = Modifier.size(52.dp))
-                Spacer(modifier = Modifier.height(4.dp))
+                Spacer(modifier = Modifier.height(spacing.spaceExtraSmall))
                 Text(
                     text = "(${movie.voteCount})",
                     color = MaterialTheme.colorScheme.onPrimaryContainer,
@@ -67,7 +82,7 @@ fun MovieDetailsSection(movie: Movie, modifier: Modifier = Modifier) {
             color = MaterialTheme.colorScheme.onPrimaryContainer,
             style = MaterialTheme.typography.headlineSmall
         )
-        Spacer(modifier = Modifier.height(16.dp))
+        Spacer(modifier = Modifier.height(spacing.spaceNormal))
         Text(
             text = movie.overview,
             color = MaterialTheme.colorScheme.onPrimaryContainer,
