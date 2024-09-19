@@ -1,4 +1,4 @@
-package com.klewerro.moviedbapp.navigation
+package com.klewerro.moviedbapp.core.presentation.navigation
 
 import android.net.Uri
 import android.os.Bundle

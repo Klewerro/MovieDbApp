@@ -1,4 +1,4 @@
-package com.klewerro.moviedbapp.navigation
+package com.klewerro.moviedbapp.core.presentation.navigation
 
 import com.klewerro.moviedbapp.core.domain.Movie
 import kotlinx.serialization.Serializable

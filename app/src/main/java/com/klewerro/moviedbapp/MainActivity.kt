@@ -19,10 +19,10 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.klewerro.moviedbapp.core.presentation.LocalSpacing
+import com.klewerro.moviedbapp.core.presentation.navigation.NavRoute
 import com.klewerro.moviedbapp.core.ui.theme.MovieDbAppTheme
+import com.klewerro.moviedbapp.movieDetails.presentation.MovieDetailsScreen
 import com.klewerro.moviedbapp.movies.presentation.MovieListScreen
-import com.klewerro.moviedbapp.navigation.NavRoute
-import com.klewerro.moviedbapp.presentation.movieDetails.MovieDetailsScreen
 import dagger.hilt.android.AndroidEntryPoint
 
 @OptIn(ExperimentalMaterial3Api::class)

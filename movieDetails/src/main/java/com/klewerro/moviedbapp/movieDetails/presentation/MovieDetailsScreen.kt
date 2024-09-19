@@ -1,4 +1,4 @@
-package com.klewerro.moviedbapp.presentation.movieDetails
+package com.klewerro.moviedbapp.movieDetails.presentation
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize

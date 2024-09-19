@@ -70,8 +70,9 @@ dependencies {
     api(libs.bundles.retrofit)
     api(libs.timber)
     api(libs.coil)
-    implementation(libs.bundles.paging)
     api(libs.kotlin.serialization)
+    implementation(libs.bundles.paging)
+    implementation(libs.bundles.navigation)
     // Hilt
     implementation(libs.dagger.hilt.android)
     implementation(libs.dagger.hilt.navigation)

@@ -1,9 +1,9 @@
-package com.klewerro.moviedbapp.presentation.movieDetails
+package com.klewerro.moviedbapp.movieDetails.presentation
 
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.navigation.toRoute
-import com.klewerro.moviedbapp.navigation.NavRoute
+import com.klewerro.moviedbapp.core.presentation.navigation.NavRoute
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
