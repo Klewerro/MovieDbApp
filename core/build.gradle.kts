@@ -5,6 +5,7 @@ import java.util.Properties
 plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.android)
+    alias(libs.plugins.kotlin.serialization.plugin)
     alias(libs.plugins.dagger.hilt.plugin)
     alias(libs.plugins.ksp)
 }
@@ -70,6 +71,7 @@ dependencies {
     api(libs.timber)
     api(libs.coil)
     implementation(libs.bundles.paging)
+    api(libs.kotlin.serialization)
     // Hilt
     implementation(libs.dagger.hilt.android)
     implementation(libs.dagger.hilt.navigation)

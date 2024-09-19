@@ -27,10 +27,11 @@ import com.klewerro.moviedbapp.core.util.testData.MovieTestData
 import com.klewerro.moviedbapp.core.R as RCore
 
 @Composable
-fun MovieListItem(movie: Movie, modifier: Modifier = Modifier) {
+fun MovieListItem(movie: Movie, onMovieClick: () -> Unit, modifier: Modifier = Modifier) {
     Card(
         modifier = modifier,
-        colors = CardDefaults.cardColors(contentColor = Color.Transparent)
+        colors = CardDefaults.cardColors(contentColor = Color.Transparent),
+        onClick = onMovieClick
     ) {
         val spacing = LocalSpacing.current
 
@@ -88,6 +89,7 @@ private fun MovieListItemPreview() {
     MovieDbAppTheme {
         MovieListItem(
             movie = MovieTestData.movie1,
+            onMovieClick = {},
             modifier = Modifier.size(180.dp, 270.dp)
         )
     }

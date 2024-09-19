@@ -1,7 +1,9 @@
 package com.klewerro.moviedbapp.core.domain
 
 import com.klewerro.moviedbapp.core.data.remote.MovieApi
+import kotlinx.serialization.Serializable
 
+@Serializable
 data class Movie(
     val id: Int,
     val title: String,
