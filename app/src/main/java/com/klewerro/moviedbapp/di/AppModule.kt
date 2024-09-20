@@ -1,9 +1,13 @@
 package com.klewerro.moviedbapp.di
 
+import android.app.Application
+import androidx.room.Room
+import com.klewerro.moviedbapp.core.data.MovieRepositoryImpl
+import com.klewerro.moviedbapp.core.data.local.LikedMovieDao
+import com.klewerro.moviedbapp.core.data.local.MovieDatabase
 import com.klewerro.moviedbapp.core.data.remote.MovieApi
 import com.klewerro.moviedbapp.core.data.remote.TheMovieDbAuthInterceptor
 import com.klewerro.moviedbapp.core.domain.contract.MovieRepository
-import com.klewerro.moviedbapp.movies.data.MovieRepositoryImpl
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -42,4 +46,16 @@ object AppModule {
             }
         )
         .build()
+
+    @Provides
+    @Singleton
+    fun provideLikedMovieDao(movieDatabase: MovieDatabase) = movieDatabase.likedMovieDao
+
+    @Provides
+    @Singleton
+    fun provideDatabase(app: Application): MovieDatabase = Room.databaseBuilder(
+        app,
+        MovieDatabase::class.java,
+        "movie_db"
+    ).build()
 }
