@@ -21,7 +21,8 @@ object MovieTestData {
         video = false,
         voteAverage = 7.31,
         voteCount = 13_000,
-        adult = false
+        adult = false,
+        isLiked = true
     )
     val movie2 = Movie(
         id = 2,
@@ -40,7 +41,7 @@ object MovieTestData {
         video = false,
         voteAverage = 6.988,
         voteCount = 8712,
-        adult = false
-
+        adult = false,
+        isLiked = false
     )
 }

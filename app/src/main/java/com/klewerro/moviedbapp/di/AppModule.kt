@@ -7,6 +7,8 @@ import com.klewerro.moviedbapp.core.data.local.LikedMovieDao
 import com.klewerro.moviedbapp.core.data.local.MovieDatabase
 import com.klewerro.moviedbapp.core.data.remote.MovieApi
 import com.klewerro.moviedbapp.core.data.remote.TheMovieDbAuthInterceptor
+import com.klewerro.moviedbapp.core.domain.SystemDateTimeProvider
+import com.klewerro.moviedbapp.core.domain.contract.DateTimeProvider
 import com.klewerro.moviedbapp.core.domain.contract.MovieRepository
 import dagger.Module
 import dagger.Provides
@@ -25,7 +27,15 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun provideMovieRepository(movieApi: MovieApi): MovieRepository = MovieRepositoryImpl(movieApi)
+    fun provideMovieRepository(
+        movieApi: MovieApi,
+        likedMovieDao: LikedMovieDao,
+        dateTimeProvider: DateTimeProvider
+    ): MovieRepository = MovieRepositoryImpl(movieApi, likedMovieDao, dateTimeProvider)
+
+    @Provides
+    @Singleton
+    fun provideDateTimeProvider(): DateTimeProvider = SystemDateTimeProvider()
 
     @Provides
     @Singleton
