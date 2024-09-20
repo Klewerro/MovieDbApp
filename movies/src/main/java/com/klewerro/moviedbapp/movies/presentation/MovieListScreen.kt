@@ -25,6 +25,7 @@ import androidx.paging.LoadStates
 import androidx.paging.PagingData
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
+import androidx.paging.compose.itemKey
 import com.klewerro.moviedbapp.core.domain.Movie
 import com.klewerro.moviedbapp.core.presentation.LocalSpacing
 import com.klewerro.moviedbapp.core.ui.theme.MovieDbAppTheme
@@ -70,9 +71,7 @@ private fun MovieListScreenContent(
             }
             items(
                 moviesPager.itemCount,
-                key = {
-                    moviesPager[it]?.id ?: it
-                }
+                key = moviesPager.itemKey { it.id }
             ) { index ->
                 val movie = moviesPager[index]
                 movie?.let { movieValue ->
