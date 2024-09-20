@@ -4,6 +4,7 @@ plugins {
     alias(libs.plugins.kotlin.serialization.plugin)
     alias(libs.plugins.dagger.hilt.plugin)
     alias(libs.plugins.ksp)
+    alias(libs.plugins.junit5)
 }
 
 android {
@@ -69,10 +70,13 @@ dependencies {
     // Hilt
     implementation(libs.dagger.hilt.android)
     implementation(libs.dagger.hilt.navigation)
+    testImplementation(project(":core"))
     ksp(libs.dagger.hilt.compiler)
 
     // Test
+    // Test
     testImplementation(libs.bundles.unitTest)
+    testRuntimeOnly(libs.junit5.engine)
     androidTestImplementation(libs.bundles.uiTest)
 
     // Debug
