@@ -5,9 +5,9 @@ import androidx.lifecycle.viewModelScope
 import com.klewerro.moviedbapp.core.domain.LikeResult
 import com.klewerro.moviedbapp.core.domain.Movie
 import com.klewerro.moviedbapp.core.domain.contract.MovieRepository
+import com.klewerro.moviedbapp.core.domain.dispatcher.DispatcherProvider
 import com.klewerro.moviedbapp.presentation.like.LikeMovieEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -20,8 +20,10 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class LikeMovieViewModel @Inject constructor(private val movieRepository: MovieRepository) :
-    ViewModel() {
+class LikeMovieViewModel @Inject constructor(
+    private val movieRepository: MovieRepository,
+    private val dispatchers: DispatcherProvider
+) : ViewModel() {
 
     private var observingJob: Job? = null
     private val isMovieLiked = MutableStateFlow<Boolean?>(null)
@@ -47,7 +49,7 @@ class LikeMovieViewModel @Inject constructor(private val movieRepository: MovieR
     }
 
     private fun likeMovie(movie: Movie) {
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch(dispatchers.io) {
             val likeResult = movieRepository.likeMovie(movie)
             likeChanged.update {
                 when (likeResult) {
@@ -64,7 +66,7 @@ class LikeMovieViewModel @Inject constructor(private val movieRepository: MovieR
             cancelObservingJob()
         }
 
-        observingJob = viewModelScope.launch(Dispatchers.IO) {
+        observingJob = viewModelScope.launch(dispatchers.io) {
             movieRepository.observeMovieLikedStatus(movieId)
                 .onEach { isLiked ->
                     isMovieLiked.update {
