@@ -27,10 +27,11 @@ import javax.inject.Inject
 class SearchViewModel @Inject constructor(private val movieRepository: MovieRepository) :
     ViewModel() {
 
-    private val _searchText = MutableStateFlow("")
-    val searchText = _searchText.asStateFlow()
+    private val _searchViewState = MutableStateFlow(SearchViewState())
+    val searchViewState = _searchViewState.asStateFlow()
 
-    val movies = searchText
+    val movies = searchViewState
+        .map { it.searchText }
         .debounce(ConfigConstants.SEARCH_MOVIE_DEBOUNCE)
         .filter { it.isNotBlank() }
         .map { it.trim() }
@@ -43,6 +44,14 @@ class SearchViewModel @Inject constructor(private val movieRepository: MovieRepo
         }.cachedIn(viewModelScope)
 
     fun onSearchTextChange(text: String) {
-        _searchText.update { text }
+        _searchViewState.update {
+            it.copy(searchText = text)
+        }
+    }
+
+    fun updateFirstVisibleScrollIndex(index: Int) {
+        _searchViewState.update {
+            it.copy(firstVisibleScrollIndex = index)
+        }
     }
 }
