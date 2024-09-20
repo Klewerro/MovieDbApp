@@ -25,8 +25,7 @@ class MovieRepositoryImpl(
     override fun observeCurrentlyPlayingMoviesPages(scope: CoroutineScope) = Pager(
         config = PagingConfig(
             pageSize = ConfigConstants.PAGING_CONFIG_PAGE_SIZE,
-            prefetchDistance = 1,
-            initialLoadSize = 1,
+            prefetchDistance = ConfigConstants.PAGING_CONFIG_PREFETCH_DISTANCE,
             enablePlaceholders = false
         ),
         pagingSourceFactory = { MoviesPagingSource(movieApi, likedMovieDao) }

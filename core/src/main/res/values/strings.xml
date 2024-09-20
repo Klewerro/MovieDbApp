@@ -8,4 +8,9 @@
     <string name="serialization_error_message">Data serialization error. Restart application and try again.</string>
     <string name="missing_internet_connection_message">Missing internet connection - could not get data. Try to reconnect to the internet or check if you have internet in that connection.</string>
     <string name="fetched_data_empty_message">Fetched data is empty.</string>
+    <string name="filled_star_content_description">Filled star indicating that movie is liked.</string>
+    <string name="navigate_back">Navigate back</string>
+    <string name="liked_movie_message">Liked movie \"%1$s\".</string>
+    <string name="disliked_movie_message">Removed movie \"%1$s\" from liked movies.</string>
+    <string name="error_movie_liking_message">Couldn\'t like movie \"%1$s\" - unexpected error.</string>
 </resources>
