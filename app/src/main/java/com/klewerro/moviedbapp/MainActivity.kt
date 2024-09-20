@@ -4,20 +4,28 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.List
+import androidx.compose.material.icons.filled.Search
+import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
-import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.compose.NavHost
@@ -48,6 +56,9 @@ class MainActivity : ComponentActivity() {
             val navController = rememberNavController()
             val backStackEntry by navController.currentBackStackEntryAsState()
             val snackbarHostState = remember { SnackbarHostState() }
+            var isSearching by rememberSaveable {
+                mutableStateOf(false)
+            }
 
             val likeMovieViewModel: LikeMovieViewModel = hiltViewModel()
             val likedMovieState by likeMovieViewModel.likeMovieState.collectAsStateWithLifecycle()
@@ -104,6 +115,35 @@ class MainActivity : ComponentActivity() {
                     snackbarHost = {
                         SnackbarHost(snackbarHostState)
                     },
+                    floatingActionButton = {
+                        AnimatedVisibility(
+                            backStackEntry
+                                ?.destination
+                                ?.route
+                                ?.substringAfterLast(".") ==
+                                NavRoute.MovieListScreen::class.java.simpleName
+                        ) {
+                            FloatingActionButton(
+                                onClick = {
+                                    isSearching = !isSearching
+                                },
+                                modifier = Modifier.padding(end = spacing.spaceNormal)
+                            ) {
+                                Icon(
+                                    imageVector = if (isSearching) {
+                                        Icons.AutoMirrored.Filled.List
+                                    } else {
+                                        Icons.Default.Search
+                                    },
+                                    contentDescription = if (isSearching) {
+                                        stringResource(RCore.string.list_of_now_playing)
+                                    } else {
+                                        stringResource(RCore.string.search)
+                                    }
+                                )
+                            }
+                        }
+                    },
                     modifier = Modifier.fillMaxSize()
                 ) { innerPadding ->
                     Box(modifier = Modifier.padding(innerPadding)) {
@@ -129,6 +169,7 @@ class MainActivity : ComponentActivity() {
                                             LikeMovieEvent.LikeMovie(it)
                                         )
                                     },
+                                    isSearching = isSearching,
                                     modifier = Modifier.padding(horizontal = spacing.spaceScreen)
                                 )
                             }
@@ -148,12 +189,5 @@ class MainActivity : ComponentActivity() {
                 }
             }
         }
-    }
-}
-
-@Preview
-@Composable
-private fun AppBarPreview() {
-    MovieDbAppTheme {
     }
 }

@@ -3,6 +3,7 @@ package com.klewerro.moviedbapp.core.fake
 import com.klewerro.moviedbapp.core.data.remote.MovieApi
 import com.klewerro.moviedbapp.core.data.remote.dto.CurrentlyPlayingResponseDto
 import com.klewerro.moviedbapp.core.data.remote.dto.DatesDto
+import com.klewerro.moviedbapp.core.data.remote.dto.SearchMovieResponseDto
 import com.klewerro.moviedbapp.core.util.testData.MovieDtoTestData
 import kotlinx.coroutines.delay
 
@@ -27,6 +28,14 @@ class FakeMovieApi : MovieApi {
         }
         return response
     }
+
+    override suspend fun searchForMovie(query: String, page: Int): SearchMovieResponseDto =
+        SearchMovieResponseDto(
+            page = 1,
+            movieDtos = listOf(MovieDtoTestData.movie1, MovieDtoTestData.movie2),
+            totalPages = 1,
+            totalResults = 2
+        )
 
     fun setTotalPages(totalPages: Int) {
         response = response.copy(totalPages = totalPages)

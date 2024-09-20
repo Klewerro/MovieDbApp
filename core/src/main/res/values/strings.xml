@@ -13,4 +13,6 @@
     <string name="liked_movie_message">Liked movie \"%1$s\".</string>
     <string name="disliked_movie_message">Removed movie \"%1$s\" from liked movies.</string>
     <string name="error_movie_liking_message">Couldn\'t like movie \"%1$s\" - unexpected error.</string>
+    <string name="search">Search</string>
+    <string name="list_of_now_playing">List of now playing</string>
 </resources>

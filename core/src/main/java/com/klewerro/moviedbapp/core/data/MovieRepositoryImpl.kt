@@ -39,6 +39,22 @@ class MovieRepositoryImpl(
         }
         .cachedIn(scope)
 
+    override fun observeSearchedMovies(query: String, scope: CoroutineScope) = Pager(
+        config = PagingConfig(
+            pageSize = ConfigConstants.PAGING_CONFIG_PAGE_SIZE,
+            prefetchDistance = ConfigConstants.PAGING_CONFIG_PREFETCH_DISTANCE,
+            enablePlaceholders = false
+        ),
+        pagingSourceFactory = { SearchPagingSource(query, movieApi, likedMovieDao) }
+    ).flow.cachedIn(scope)
+        .combine(likedMovieDao.observeAllLikedMovieIds()) { moviePagingData, likedMovies ->
+            moviePagingData.map { movie ->
+                movie.copy(
+                    isLiked = likedMovies.contains(movie.id)
+                )
+            }
+        }
+
     override fun observeMovieLikedStatus(movieId: Int): Flow<Boolean> =
         likedMovieDao.observeMovieLikedStatus(movieId)
 
