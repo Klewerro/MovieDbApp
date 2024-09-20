@@ -8,6 +8,7 @@ import kotlinx.coroutines.flow.Flow
 
 interface MovieRepository {
     fun observeCurrentlyPlayingMoviesPages(scope: CoroutineScope): Flow<PagingData<Movie>>
+    fun observeSearchedMovies(query: String, scope: CoroutineScope): Flow<PagingData<Movie>>
     fun observeMovieLikedStatus(movieId: Int): Flow<Boolean>
     suspend fun likeMovie(movie: Movie): LikeResult
 }
