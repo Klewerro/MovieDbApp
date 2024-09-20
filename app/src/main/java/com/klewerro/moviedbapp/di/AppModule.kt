@@ -10,6 +10,8 @@ import com.klewerro.moviedbapp.core.data.remote.TheMovieDbAuthInterceptor
 import com.klewerro.moviedbapp.core.domain.SystemDateTimeProvider
 import com.klewerro.moviedbapp.core.domain.contract.DateTimeProvider
 import com.klewerro.moviedbapp.core.domain.contract.MovieRepository
+import com.klewerro.moviedbapp.core.domain.dispatcher.DispatcherProvider
+import com.klewerro.moviedbapp.core.domain.dispatcher.StandardDispatchers
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -68,4 +70,8 @@ object AppModule {
         MovieDatabase::class.java,
         "movie_db"
     ).build()
+
+    @Provides
+    @Singleton
+    fun provideDispatcherProvider(): DispatcherProvider = StandardDispatchers()
 }
