@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.klewerro.moviedbapp.core.domain.LikeResult
 import com.klewerro.moviedbapp.core.domain.Movie
 import com.klewerro.moviedbapp.core.domain.contract.MovieRepository
+import com.klewerro.moviedbapp.presentation.like.LikeMovieEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -36,7 +37,16 @@ class LikeMovieViewModel @Inject constructor(private val movieRepository: MovieR
         )
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(10_000L), LikeMovieState())
 
-    fun likeMovie(movie: Movie) {
+    fun onEvent(event: LikeMovieEvent) {
+        when (event) {
+            is LikeMovieEvent.LikeMovie -> likeMovie(event.movie)
+            is LikeMovieEvent.ObserveMovieLikeStatus -> observeMovieLikeStatus(event.movieId)
+            LikeMovieEvent.StopObservingMovieLikeStatus -> stopObservingMovieLikeStatus()
+            LikeMovieEvent.DismissLikeChanged -> dismissLikeChanged()
+        }
+    }
+
+    private fun likeMovie(movie: Movie) {
         viewModelScope.launch(Dispatchers.IO) {
             val likeResult = movieRepository.likeMovie(movie)
             likeChanged.update {
@@ -49,7 +59,7 @@ class LikeMovieViewModel @Inject constructor(private val movieRepository: MovieR
         }
     }
 
-    fun observeMovieLikeStatus(movieId: Int) {
+    private fun observeMovieLikeStatus(movieId: Int) {
         if (observingJob != null) {
             cancelObservingJob()
         }
@@ -65,12 +75,12 @@ class LikeMovieViewModel @Inject constructor(private val movieRepository: MovieR
         }
     }
 
-    fun stopObservingMovieLikeStatus() {
+    private fun stopObservingMovieLikeStatus() {
         cancelObservingJob()
         isMovieLiked.update { null }
     }
 
-    fun dismissLikeChanged() {
+    private fun dismissLikeChanged() {
         likeChanged.update {
             LikeChanged.Unchanged
         }

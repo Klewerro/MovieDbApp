@@ -33,6 +33,7 @@ import com.klewerro.moviedbapp.movieDetails.presentation.MovieDetailsScreen
 import com.klewerro.moviedbapp.movies.presentation.MovieListScreen
 import com.klewerro.moviedbapp.presentation.LikeChanged
 import com.klewerro.moviedbapp.presentation.LikeMovieViewModel
+import com.klewerro.moviedbapp.presentation.like.LikeMovieEvent
 import dagger.hilt.android.AndroidEntryPoint
 import com.klewerro.moviedbapp.core.R as RCore
 
@@ -61,7 +62,7 @@ class MainActivity : ComponentActivity() {
                                     changedObject.movieTitle
                                 )
                             )
-                            likeMovieViewModel.dismissLikeChanged()
+                            likeMovieViewModel.onEvent(LikeMovieEvent.DismissLikeChanged)
                         }
 
                         is LikeChanged.LikeRemoved -> {
@@ -71,7 +72,7 @@ class MainActivity : ComponentActivity() {
                                     changedObject.movieTitle
                                 )
                             )
-                            likeMovieViewModel.dismissLikeChanged()
+                            likeMovieViewModel.onEvent(LikeMovieEvent.DismissLikeChanged)
                         }
 
                         is LikeChanged.Error -> {
@@ -82,7 +83,7 @@ class MainActivity : ComponentActivity() {
                                 ),
                                 duration = SnackbarDuration.Long
                             )
-                            likeMovieViewModel.dismissLikeChanged()
+                            likeMovieViewModel.onEvent(LikeMovieEvent.DismissLikeChanged)
                         }
                     }
                 }
@@ -93,7 +94,11 @@ class MainActivity : ComponentActivity() {
                             backStackEntry = backStackEntry,
                             isMovieLiked = likedMovieState.isMovieLiked,
                             onBackArrowClick = navController::popBackStack,
-                            onLikeIconClick = likeMovieViewModel::likeMovie
+                            onLikeIconClick = {
+                                likeMovieViewModel.onEvent(
+                                    LikeMovieEvent.LikeMovie(it)
+                                )
+                            }
                         )
                     },
                     snackbarHost = {
@@ -107,7 +112,9 @@ class MainActivity : ComponentActivity() {
                             startDestination = NavRoute.MovieListScreen
                         ) {
                             composable<NavRoute.MovieListScreen> {
-                                likeMovieViewModel.stopObservingMovieLikeStatus()
+                                likeMovieViewModel.onEvent(
+                                    LikeMovieEvent.StopObservingMovieLikeStatus
+                                )
                                 MovieListScreen(
                                     onMovieClick = { popularityIndex, movie ->
                                         navController.navigate(
@@ -117,7 +124,11 @@ class MainActivity : ComponentActivity() {
                                             )
                                         )
                                     },
-                                    onMovieLongClick = likeMovieViewModel::likeMovie,
+                                    onMovieLongClick = {
+                                        likeMovieViewModel.onEvent(
+                                            LikeMovieEvent.LikeMovie(it)
+                                        )
+                                    },
                                     modifier = Modifier.padding(horizontal = spacing.spaceScreen)
                                 )
                             }
@@ -127,7 +138,9 @@ class MainActivity : ComponentActivity() {
                                 val movieId = backStackEntry
                                     .toRoute<NavRoute.MovieDetailsScreen>()
                                     .movie.id
-                                likeMovieViewModel.observeMovieLikeStatus(movieId)
+                                likeMovieViewModel.onEvent(
+                                    LikeMovieEvent.ObserveMovieLikeStatus(movieId)
+                                )
                                 MovieDetailsScreen()
                             }
                         }
