@@ -1,17 +1,22 @@
-package com.klewerro.moviedbapp.movies.data
+package com.klewerro.moviedbapp.core.data
 
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
+import com.klewerro.moviedbapp.core.data.local.LikedMovieDao
+import com.klewerro.moviedbapp.core.data.mapper.toMovie
 import com.klewerro.moviedbapp.core.data.remote.MovieApi
-import com.klewerro.moviedbapp.core.data.remote.mapper.toMovie
+import com.klewerro.moviedbapp.core.data.remote.dto.MovieDto
 import com.klewerro.moviedbapp.core.domain.Movie
 import com.klewerro.moviedbapp.core.util.ConfigConstants
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.withContext
 import retrofit2.HttpException
 import timber.log.Timber
 import java.io.IOException
 
-class MoviesPagingSource(private val movieApi: MovieApi) : PagingSource<Int, Movie>() {
+class MoviesPagingSource(private val movieApi: MovieApi, private val likedMovieDao: LikedMovieDao) :
+    PagingSource<Int, Movie>() {
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, Movie> {
         return try {
             val position = params.key ?: 1
@@ -22,16 +27,17 @@ class MoviesPagingSource(private val movieApi: MovieApi) : PagingSource<Int, Mov
 
             val currentlyPlayingResponse = movieApi
                 .getCurrentlyPlaying(position)
+            val movieDtoList = currentlyPlayingResponse.movieDtos
+            val likedIds = movieDtoList.getListOfLikedMovieIds()
 
-            val movies = currentlyPlayingResponse.movieDtos
-                .map {
-                    try {
-                        it.toMovie()
-                    } catch (nullException: NullPointerException) {
-                        Timber.e(nullException)
-                        return LoadResult.Error(nullException)
-                    }
+            val movies = movieDtoList.map {
+                try {
+                    it.toMovie(isLiked = likedIds.contains(it.id))
+                } catch (nullException: NullPointerException) {
+                    Timber.e(nullException)
+                    return LoadResult.Error(nullException)
                 }
+            }
 
             if (currentlyPlayingResponse.movieDtos.isEmpty()) {
                 return LoadResult.Error(IllegalStateException("Movie list is empty."))
@@ -40,8 +46,7 @@ class MoviesPagingSource(private val movieApi: MovieApi) : PagingSource<Int, Mov
             LoadResult.Page(
                 data = movies,
                 prevKey = if (position == 1) null else (position - 1),
-                nextKey = if (position ==
-                    currentlyPlayingResponse.totalPages
+                nextKey = if (position == currentlyPlayingResponse.totalPages
                 ) {
                     null
                 } else {
@@ -55,10 +60,20 @@ class MoviesPagingSource(private val movieApi: MovieApi) : PagingSource<Int, Mov
         }
     }
 
-    override fun getRefreshKey(state: PagingState<Int, Movie>): Int? {
-        return state.anchorPosition?.let { anchorPosition ->
+    override fun getRefreshKey(state: PagingState<Int, Movie>): Int? =
+        state.anchorPosition?.let { anchorPosition ->
             val anchorPage = state.closestPageToPosition(anchorPosition)
             anchorPage?.prevKey?.plus(1) ?: anchorPage?.nextKey?.minus(1)
         }
+
+    private suspend fun List<MovieDto>.getListOfLikedMovieIds(): List<Int> {
+        val moviesIds = this.map { it.id }
+
+        var likedIds: List<Int>
+        withContext(Dispatchers.IO) {
+            likedIds = likedMovieDao.getListOfLikedMovieIds(moviesIds)
+        }
+
+        return likedIds
     }
 }

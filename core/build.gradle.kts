@@ -1,4 +1,3 @@
-
 import java.io.FileInputStream
 import java.util.Properties
 
@@ -77,6 +76,11 @@ dependencies {
     implementation(libs.dagger.hilt.android)
     implementation(libs.dagger.hilt.navigation)
     ksp(libs.dagger.hilt.compiler)
+
+    // Room
+    api(libs.room.runtime)
+    implementation(libs.room.ktx)
+    ksp(libs.room.compiler)
 
     // Test
     testImplementation(libs.bundles.unitTest)

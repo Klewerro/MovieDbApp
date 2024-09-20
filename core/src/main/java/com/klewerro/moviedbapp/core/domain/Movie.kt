@@ -18,7 +18,8 @@ data class Movie(
     val video: Boolean,
     val voteAverage: Double,
     val voteCount: Int,
-    val adult: Boolean
+    val adult: Boolean,
+    val isLiked: Boolean
 ) {
     val releaseYear = releaseDate.substringBefore('-')
     val backdrop500Url = MovieApi.IMAGE_500 + backdropPath
