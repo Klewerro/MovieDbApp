@@ -46,8 +46,7 @@ class MoviesPagingSource(private val movieApi: MovieApi, private val likedMovieD
             LoadResult.Page(
                 data = movies,
                 prevKey = if (position == 1) null else (position - 1),
-                nextKey = if (position == currentlyPlayingResponse.totalPages
-                ) {
+                nextKey = if (position == currentlyPlayingResponse.totalPages) {
                     null
                 } else {
                     position + 1
