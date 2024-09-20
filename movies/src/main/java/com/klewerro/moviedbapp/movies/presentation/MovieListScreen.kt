@@ -37,6 +37,7 @@ import kotlinx.coroutines.flow.flowOf
 @Composable
 fun MovieListScreen(
     onMovieClick: (Int, Movie) -> Unit,
+    onMovieLongClick: (Movie) -> Unit,
     modifier: Modifier = Modifier,
     movieListViewModel: MovieListViewModel = hiltViewModel<MovieListViewModel>()
 ) {
@@ -45,6 +46,7 @@ fun MovieListScreen(
     MovieListScreenContent(
         moviesPager = currentlyPlayingMovies,
         onMovieClick = onMovieClick,
+        onMovieLongClick = onMovieLongClick,
         modifier = modifier.fillMaxSize()
     )
 }
@@ -53,7 +55,8 @@ fun MovieListScreen(
 private fun MovieListScreenContent(
     moviesPager: LazyPagingItems<Movie>,
     modifier: Modifier = Modifier,
-    onMovieClick: (Int, Movie) -> Unit
+    onMovieClick: (Int, Movie) -> Unit,
+    onMovieLongClick: (Movie) -> Unit
 ) {
     val spacing = LocalSpacing.current
 
@@ -79,6 +82,9 @@ private fun MovieListScreenContent(
                         movieValue,
                         onMovieClick = {
                             onMovieClick(index, movieValue)
+                        },
+                        onMovieLongClick = {
+                            onMovieLongClick(movieValue)
                         },
                         modifier = Modifier.size(180.dp, 270.dp)
                     )
@@ -189,7 +195,11 @@ private fun MovieListScreenContentPreview() {
         )
     ).collectAsLazyPagingItems()
     MovieDbAppTheme {
-        MovieListScreenContent(moviesPager = pagingFlow, onMovieClick = { _, _ -> })
+        MovieListScreenContent(
+            moviesPager = pagingFlow,
+            onMovieClick = { _, _ -> },
+            onMovieLongClick = {}
+        )
     }
 }
 
@@ -210,6 +220,7 @@ private fun MovieListScreenContentRefreshPreview() {
         MovieListScreenContent(
             moviesPager = pagingFlow,
             onMovieClick = { _, _ -> },
+            onMovieLongClick = {},
             modifier = Modifier.height(200.dp)
         )
     }
@@ -236,7 +247,8 @@ private fun MovieListScreenContentAppendPreview() {
     MovieDbAppTheme {
         MovieListScreenContent(
             moviesPager = pagingFlow,
-            onMovieClick = { _, _ -> }
+            onMovieClick = { _, _ -> },
+            onMovieLongClick = {}
         )
     }
 }
@@ -260,7 +272,11 @@ private fun MovieListScreenContentAppendErrorPreview() {
         )
     ).collectAsLazyPagingItems()
     MovieDbAppTheme {
-        MovieListScreenContent(moviesPager = pagingFlow, onMovieClick = { _, _ -> })
+        MovieListScreenContent(
+            moviesPager = pagingFlow,
+            onMovieClick = { _, _ -> },
+            onMovieLongClick = {}
+        )
     }
 }
 // endregion
