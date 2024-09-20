@@ -2,6 +2,7 @@ package com.klewerro.moviedbapp.movies.presentation
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -14,15 +15,23 @@ import androidx.compose.foundation.lazy.grid.LazyGridItemScope
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.TextField
 import androidx.compose.material3.pulltorefresh.PullToRefreshBox
+import androidx.compose.material3.pulltorefresh.PullToRefreshDefaults.Indicator
 import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.paging.LoadState
 import androidx.paging.LoadStates
 import androidx.paging.PagingData
@@ -41,16 +50,50 @@ fun MovieListScreen(
     onMovieClick: (Int, Movie) -> Unit,
     onMovieLongClick: (Movie) -> Unit,
     modifier: Modifier = Modifier,
-    movieListViewModel: MovieListViewModel = hiltViewModel<MovieListViewModel>()
+    isSearching: Boolean,
+    movieListViewModel: MovieListViewModel = hiltViewModel<MovieListViewModel>(),
+    searchViewModel: SearchViewModel = hiltViewModel<SearchViewModel>()
 ) {
     val currentlyPlayingMovies =
         movieListViewModel.currentlyPlayingMoviesPages.collectAsLazyPagingItems()
-    MovieListScreenContent(
-        moviesPager = currentlyPlayingMovies,
-        onMovieClick = onMovieClick,
-        onMovieLongClick = onMovieLongClick,
-        modifier = modifier.fillMaxSize()
-    )
+    val searchText by searchViewModel.searchText.collectAsStateWithLifecycle()
+    val searchedMovies = searchViewModel.movies.collectAsLazyPagingItems()
+    var skipFirstRefreshIndication by rememberSaveable {
+        mutableStateOf(true)
+    }
+
+    if (isSearching) {
+        LaunchedEffect(searchedMovies.loadState.refresh) {
+            if (searchedMovies.loadState.refresh != LoadState.Loading) {
+                skipFirstRefreshIndication = false
+            }
+        }
+
+        Column(modifier = modifier.fillMaxSize().padding(0.dp)) {
+            TextField(
+                value = searchText,
+                onValueChange = searchViewModel::onSearchTextChange,
+                modifier = Modifier.fillMaxWidth(),
+                singleLine = true
+
+            )
+            Spacer(modifier = Modifier.height(8.dp))
+            MovieListScreenContent(
+                moviesPager = searchedMovies,
+                onMovieClick = onMovieClick,
+                onMovieLongClick = onMovieLongClick,
+                skipRefreshIndication = skipFirstRefreshIndication,
+                modifier = Modifier.weight(1f)
+            )
+        }
+    } else {
+        MovieListScreenContent(
+            moviesPager = currentlyPlayingMovies,
+            onMovieClick = onMovieClick,
+            onMovieLongClick = onMovieLongClick,
+            modifier = modifier.fillMaxSize()
+        )
+    }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -59,7 +102,8 @@ private fun MovieListScreenContent(
     moviesPager: LazyPagingItems<Movie>,
     modifier: Modifier = Modifier,
     onMovieClick: (Int, Movie) -> Unit,
-    onMovieLongClick: (Movie) -> Unit
+    onMovieLongClick: (Movie) -> Unit,
+    skipRefreshIndication: Boolean = false
 ) {
     val spacing = LocalSpacing.current
     val pullToRefreshState = rememberPullToRefreshState()
@@ -68,7 +112,16 @@ private fun MovieListScreenContent(
         modifier = modifier,
         state = pullToRefreshState,
         isRefreshing = moviesPager.loadState.refresh is LoadState.Loading,
-        onRefresh = moviesPager::refresh
+        onRefresh = moviesPager::refresh,
+        indicator = {
+            if (!skipRefreshIndication) {
+                Indicator(
+                    modifier = Modifier.align(Alignment.TopCenter),
+                    isRefreshing = moviesPager.loadState.refresh is LoadState.Loading,
+                    state = pullToRefreshState
+                )
+            }
+        }
     ) {
         LazyVerticalGrid(
             columns = GridCells.Adaptive(180.dp),
@@ -111,7 +164,7 @@ private fun MovieListScreenContent(
 }
 
 @Composable
-private fun MoviePaginationProgressAndErrorHandling(
+fun MoviePaginationProgressAndErrorHandling(
     moviesPager: LazyPagingItems<Movie>,
     lazyGridItemScope: LazyGridItemScope
 ) {

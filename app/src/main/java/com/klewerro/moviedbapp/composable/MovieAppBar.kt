@@ -31,6 +31,7 @@ import com.klewerro.moviedbapp.core.presentation.navigation.NavRoute
 import com.klewerro.moviedbapp.core.ui.theme.MovieDbAppTheme
 import com.klewerro.moviedbapp.core.ui.theme.gold
 import com.klewerro.moviedbapp.core.ui.theme.goldDark
+import com.klewerro.moviedbapp.core.R as RCore
 
 @Composable
 fun MovieAppBar(
@@ -83,7 +84,7 @@ private fun MovieAppBarContent(
                     Icon(
                         imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                         contentDescription = stringResource(
-                            com.klewerro.moviedbapp.core.R.string.navigate_back
+                            RCore.string.navigate_back
                         ),
                         tint = MaterialTheme.colorScheme.onPrimary
                     )
@@ -101,7 +102,7 @@ private fun MovieAppBarContent(
                         Icon(
                             imageVector = Icons.Default.Star,
                             contentDescription = stringResource(
-                                com.klewerro.moviedbapp.core.R.string.filled_star_content_description
+                                RCore.string.filled_star_content_description
                             ),
                             tint = if (isLiked) {
                                 if (isSystemInDarkTheme()) gold else goldDark
