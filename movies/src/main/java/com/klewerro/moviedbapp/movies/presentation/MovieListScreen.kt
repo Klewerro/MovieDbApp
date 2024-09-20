@@ -13,6 +13,9 @@ import androidx.compose.foundation.lazy.grid.GridItemSpan
 import androidx.compose.foundation.lazy.grid.LazyGridItemScope
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.pulltorefresh.PullToRefreshBox
+import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -50,6 +53,7 @@ fun MovieListScreen(
     )
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun MovieListScreenContent(
     moviesPager: LazyPagingItems<Movie>,
@@ -58,8 +62,14 @@ private fun MovieListScreenContent(
     onMovieLongClick: (Movie) -> Unit
 ) {
     val spacing = LocalSpacing.current
+    val pullToRefreshState = rememberPullToRefreshState()
 
-    Box(modifier = modifier) {
+    PullToRefreshBox(
+        modifier = modifier,
+        state = pullToRefreshState,
+        isRefreshing = moviesPager.loadState.refresh is LoadState.Loading,
+        onRefresh = moviesPager::refresh
+    ) {
         LazyVerticalGrid(
             columns = GridCells.Adaptive(180.dp),
             modifier = modifier.fillMaxSize(),
@@ -108,47 +118,36 @@ private fun MoviePaginationProgressAndErrorHandling(
     val spacing = LocalSpacing.current
 
     with(lazyGridItemScope) {
-        when (moviesPager.loadState.append) {
-            is LoadState.NotLoading -> Unit
-            LoadState.Loading -> {
-                Box(
-                    modifier = Modifier.fillMaxWidth(),
-                    contentAlignment = Alignment.Center
-                ) {
-                    CircularProgressIndicator()
-                }
-            }
-
-            is LoadState.Error -> {
+        if (moviesPager.loadState.refresh is LoadState.Error) {
+            Box(
+                modifier = Modifier.fillMaxSize(),
+                contentAlignment = Alignment.Center
+            ) {
                 ErrorMessageRefreshCard(
-                    errorLoadState = moviesPager.loadState.append,
+                    errorLoadState = moviesPager.loadState.refresh,
                     onRetryClick = { moviesPager.retry() },
                     modifier = Modifier.fillMaxWidth()
                 )
-                Spacer(modifier = Modifier.height(spacing.spaceLarge))
             }
-        }
-        when (moviesPager.loadState.refresh) {
-            is LoadState.NotLoading -> Unit
-            LoadState.Loading -> {
-                Box(
-                    modifier = Modifier.fillMaxSize(),
-                    contentAlignment = Alignment.Center
-                ) {
-                    CircularProgressIndicator()
+        } else {
+            when (moviesPager.loadState.append) {
+                is LoadState.NotLoading -> Unit
+                LoadState.Loading -> {
+                    Box(
+                        modifier = Modifier.fillMaxWidth(),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        CircularProgressIndicator()
+                    }
                 }
-            }
 
-            is LoadState.Error -> {
-                Box(
-                    modifier = Modifier.fillMaxSize(),
-                    contentAlignment = Alignment.Center
-                ) {
+                is LoadState.Error -> {
                     ErrorMessageRefreshCard(
-                        errorLoadState = moviesPager.loadState.refresh,
+                        errorLoadState = moviesPager.loadState.append,
                         onRetryClick = { moviesPager.retry() },
                         modifier = Modifier.fillMaxWidth()
                     )
+                    Spacer(modifier = Modifier.height(spacing.spaceLarge))
                 }
             }
         }
