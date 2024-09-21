@@ -1,7 +1,10 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
+    alias(libs.plugins.kotlin.serialization.plugin)
+    alias(libs.plugins.dagger.hilt.plugin)
     alias(libs.plugins.ksp)
+    alias(libs.plugins.junit5)
 }
 
 android {
@@ -59,10 +62,21 @@ android {
 
 dependencies {
     implementation(project(":core"))
+    implementation(project(":movies"))
+    implementation(project(":movieDetails"))
+
     implementation(libs.bundles.navigation)
 
+    // Hilt
+    implementation(libs.dagger.hilt.android)
+    implementation(libs.dagger.hilt.navigation)
+    testImplementation(project(":core"))
+    ksp(libs.dagger.hilt.compiler)
+
+    // Test
     // Test
     testImplementation(libs.bundles.unitTest)
+    testRuntimeOnly(libs.junit5.engine)
     androidTestImplementation(libs.bundles.uiTest)
 
     // Debug

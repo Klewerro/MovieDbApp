@@ -1,6 +1,13 @@
+import java.io.FileInputStream
+import java.util.Properties
+
 plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.android)
+    alias(libs.plugins.kotlin.serialization.plugin)
+    alias(libs.plugins.dagger.hilt.plugin)
+    alias(libs.plugins.ksp)
+    alias(libs.plugins.junit5)
 }
 
 android {
@@ -14,8 +21,15 @@ android {
         consumerProguardFiles("consumer-rules.pro")
     }
 
+    val apiKey = Properties().apply {
+        load(FileInputStream(File(rootProject.rootDir, "local.properties")))
+    }.getProperty("api.key")
     buildTypes {
+        debug {
+            buildConfigField("String", "API_KEY", apiKey)
+        }
         release {
+            buildConfigField("String", "API_KEY", apiKey)
             isMinifyEnabled = false
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
@@ -53,9 +67,25 @@ android {
 dependencies {
     api(libs.bundles.androidx)
     api(libs.bundles.compose)
+    api(libs.bundles.retrofit)
+    api(libs.timber)
+    api(libs.coil)
+    api(libs.kotlin.serialization)
+    implementation(libs.bundles.paging)
+    implementation(libs.bundles.navigation)
+    // Hilt
+    implementation(libs.dagger.hilt.android)
+    implementation(libs.dagger.hilt.navigation)
+    ksp(libs.dagger.hilt.compiler)
+
+    // Room
+    api(libs.room.runtime)
+    implementation(libs.room.ktx)
+    ksp(libs.room.compiler)
 
     // Test
     testImplementation(libs.bundles.unitTest)
+    testRuntimeOnly(libs.junit5.engine)
 
     // Debug
     debugImplementation(libs.compose.ui.tooling)

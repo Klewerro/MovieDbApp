@@ -1,6 +1,9 @@
-package com.klewerro.moviedbapp.ui.theme
+package com.klewerro.moviedbapp.core.ui.theme
 
 import androidx.compose.ui.graphics.Color
+
+val gold = Color(0xFFFFD700)
+val goldDark = Color(0xC8FFD700)
 
 val primaryLight = Color(0xFF246488)
 val onPrimaryLight = Color(0xFFFFFFFF)
