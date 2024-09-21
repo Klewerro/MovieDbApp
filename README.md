@@ -25,9 +25,10 @@ The project follows a multi-module architecture. Modules are context based, and 
 - **Movies** and **MovieDetails** - feature modules containing mainly Screens and it's composables.
 
 ## Project setup
-To run the project, you need to provide the API key for *The Movie Db* in file [local.properties](./local.properties). Instructions on how to get it can be found [here](https://developer.themoviedb.org/docs/getting-started).
+To run the project, you need to provide the API key for *The Movie Db* in file local.properties (./local.properties). Instructions on how to get it can be found [here](https://developer.themoviedb.org/docs/getting-started).
 You can also just install .apk, which can be found in release section in this repository.
 
+![Api key example](./docs/screenshots/api_key.png)
 
 ## Libraries and technologies used:
 - General
