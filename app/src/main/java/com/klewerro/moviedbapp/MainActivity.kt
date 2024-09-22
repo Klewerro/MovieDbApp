@@ -45,11 +45,6 @@ class MainActivity : ComponentActivity() {
                                     )
                                 )
                             },
-                            onMovieLongClick = {
-//                                likeMovieViewModel.onEvent(
-//                                    LikeMovieEvent.LikeMovie(it)
-//                                )
-                            },
                             snackbarHostState = snackbarHostState,
                             modifier = Modifier.padding(horizontal = spacing.spaceScreen)
                         )

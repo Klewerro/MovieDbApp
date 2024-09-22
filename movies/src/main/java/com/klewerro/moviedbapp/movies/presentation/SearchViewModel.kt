@@ -1,9 +1,10 @@
 package com.klewerro.moviedbapp.movies.presentation
 
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.cachedIn
 import com.klewerro.moviedbapp.core.domain.contract.MovieRepository
+import com.klewerro.moviedbapp.core.domain.dispatcher.DispatcherProvider
+import com.klewerro.moviedbapp.core.presentation.like.BaseLikeMovieViewModel
 import com.klewerro.moviedbapp.core.util.ConfigConstants
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -24,8 +25,10 @@ import javax.inject.Inject
 
 @OptIn(FlowPreview::class, ExperimentalCoroutinesApi::class)
 @HiltViewModel
-class SearchViewModel @Inject constructor(private val movieRepository: MovieRepository) :
-    ViewModel() {
+class SearchViewModel @Inject constructor(
+    dispatchers: DispatcherProvider,
+    private val movieRepository: MovieRepository
+) : BaseLikeMovieViewModel(movieRepository, dispatchers) {
 
     private val _searchViewState = MutableStateFlow(SearchViewState())
     val searchViewState = _searchViewState.asStateFlow()

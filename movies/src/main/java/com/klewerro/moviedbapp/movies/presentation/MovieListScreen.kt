@@ -33,12 +33,13 @@ import com.klewerro.moviedbapp.core.R
 import com.klewerro.moviedbapp.core.domain.Movie
 import com.klewerro.moviedbapp.core.presentation.LocalSpacing
 import com.klewerro.moviedbapp.core.presentation.MovieAppBar
+import com.klewerro.moviedbapp.core.presentation.like.LikeMovieEvent
+import com.klewerro.moviedbapp.core.presentation.like.LikeStateChangedLaunchedEffect
 import com.klewerro.moviedbapp.movies.presentation.composable.MovieListScreenContent
 
 @Composable
 fun MovieListScreen(
     onMovieClick: (Int, Movie) -> Unit,
-    onMovieLongClick: (Movie) -> Unit,
     modifier: Modifier = Modifier,
     snackbarHostState: SnackbarHostState,
     movieListViewModel: MovieListViewModel = hiltViewModel<MovieListViewModel>(),
@@ -95,6 +96,7 @@ fun MovieListScreen(
                         skipFirstRefreshIndication = false
                     }
                 }
+                LikeStateChangedLaunchedEffect(searchViewModel, snackbarHostState)
 
                 Column(
                     modifier = modifier
@@ -111,7 +113,9 @@ fun MovieListScreen(
                     MovieListScreenContent(
                         moviesPager = searchedMovies,
                         onMovieClick = onMovieClick,
-                        onMovieLongClick = onMovieLongClick,
+                        onMovieLongClick = {
+                            searchViewModel.onLikeMovieEvent(LikeMovieEvent.LikeMovie(it))
+                        },
                         skipRefreshIndication = skipFirstRefreshIndication,
                         modifier = Modifier.weight(1f),
                         initialFirstVisibleItemIndex = searchViewState.firstVisibleScrollIndex,
@@ -125,10 +129,15 @@ fun MovieListScreen(
                     movieListViewModel.currentlyPlayingMoviesPages.collectAsLazyPagingItems()
                 val currentlyPlayingFirstVisibleScrollIndex by movieListViewModel.firstVisibleScrollIndex
                     .collectAsStateWithLifecycle()
+
+                LikeStateChangedLaunchedEffect(movieListViewModel, snackbarHostState)
+
                 MovieListScreenContent(
                     moviesPager = currentlyPlayingMovies,
                     onMovieClick = onMovieClick,
-                    onMovieLongClick = onMovieLongClick,
+                    onMovieLongClick = {
+                        movieListViewModel.onLikeMovieEvent(LikeMovieEvent.LikeMovie(it))
+                    },
                     modifier = modifier
                         .fillMaxSize(),
                     initialFirstVisibleItemIndex = currentlyPlayingFirstVisibleScrollIndex,

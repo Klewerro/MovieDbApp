@@ -17,11 +17,9 @@ import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -30,7 +28,6 @@ import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalConfiguration
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -39,6 +36,8 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.AsyncImage
 import com.klewerro.moviedbapp.core.R
 import com.klewerro.moviedbapp.core.presentation.MovieAppBar
+import com.klewerro.moviedbapp.core.presentation.like.LikeMovieEvent
+import com.klewerro.moviedbapp.core.presentation.like.LikeStateChangedLaunchedEffect
 import com.klewerro.moviedbapp.core.ui.theme.MovieDbAppTheme
 import com.klewerro.moviedbapp.core.ui.theme.gold
 import com.klewerro.moviedbapp.core.ui.theme.goldDark
@@ -54,50 +53,17 @@ fun MovieDetailsScreen(
     onBackClick: () -> Unit,
     movieDetailsViewModel: MovieDetailsViewModel = hiltViewModel()
 ) {
-    val context = LocalContext.current
     val state by movieDetailsViewModel.state.collectAsStateWithLifecycle()
 
-    LaunchedEffect(state.likeChanged) {
-        when (val changedObject = state.likeChanged) {
-            LikeChanged.Unchanged -> Unit
-            is LikeChanged.Liked -> {
-                snackbarHostState.showSnackbar(
-                    context.getString(
-                        RCore.string.liked_movie_message,
-                        changedObject.movieTitle
-                    )
-                )
-                movieDetailsViewModel.onEvent(MovieDetailsEvent.DismissChangedDetails)
-            }
-
-            is LikeChanged.LikeRemoved -> {
-                snackbarHostState.showSnackbar(
-                    context.getString(
-                        RCore.string.disliked_movie_message,
-                        changedObject.movieTitle
-                    )
-                )
-                movieDetailsViewModel.onEvent(MovieDetailsEvent.DismissChangedDetails)
-            }
-
-            is LikeChanged.Error -> {
-                snackbarHostState.showSnackbar(
-                    message = context.getString(
-                        RCore.string.error_movie_liking_message,
-                        changedObject.movieTitle
-                    ),
-                    duration = SnackbarDuration.Long
-                )
-                movieDetailsViewModel.onEvent(MovieDetailsEvent.DismissChangedDetails)
-            }
-        }
-    }
+    LikeStateChangedLaunchedEffect(movieDetailsViewModel, snackbarHostState)
 
     MovieDetailsScreenContent(
         movieDetailsState = state,
         snackbarHostState = snackbarHostState,
         onBackClick = onBackClick,
-        onStarClick = { movieDetailsViewModel.onEvent(MovieDetailsEvent.MovieDetails) },
+        onStarClick = {
+            movieDetailsViewModel.onLikeMovieEvent(LikeMovieEvent.LikeMovie(state.movie))
+        },
         modifier = modifier.fillMaxSize()
     )
 }
