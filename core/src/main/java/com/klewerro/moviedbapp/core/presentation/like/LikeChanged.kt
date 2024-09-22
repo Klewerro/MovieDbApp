@@ -1,9 +1,4 @@
-package com.klewerro.moviedbapp.presentation
-
-data class LikeMovieState(
-    val isMovieLiked: Boolean? = null,
-    val likeChanged: LikeChanged = LikeChanged.Unchanged
-)
+package com.klewerro.moviedbapp.core.presentation.like
 
 sealed class LikeChanged {
     data object Unchanged : LikeChanged()

@@ -8,7 +8,6 @@ import assertk.assertions.isNull
 import com.klewerro.moviedbapp.core.domain.LikeResult
 import com.klewerro.moviedbapp.core.domain.contract.MovieRepository
 import com.klewerro.moviedbapp.core.util.testData.MovieTestData
-import com.klewerro.moviedbapp.presentation.like.LikeMovieEvent
 import com.klewerro.moviedbapp.util.MainCoroutineExtension
 import com.klewerro.moviedbapp.util.TestDispatchers
 import io.mockk.MockKAnnotations
